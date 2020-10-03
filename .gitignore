@@ -1,0 +1,4 @@
+db_datas/*
+logs/*
+
+properties.env

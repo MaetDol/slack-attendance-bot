@@ -1,0 +1,14 @@
+CREATE DATABASE IF NOT EXISTS slack_bot;
+USE slack_bot;
+
+CREATE TABLE IF NOT EXISTS attendance(
+  date TIMESTAMP DEFAULT NOW(),
+  ts VARCHAR(20) NOT NULL,
+  user VARCHAR(15) NOT NULL,
+  channel VARCHAR(15) NOT NULL,
+  consecutive INT DEFAULT 0,
+  title VARCHAR(200) NOT NULL DEFAULT '제목 없음',
+  permalink VARCHAR(200) NOT NULL DEFAULT 'https://slack.com/404',
+  id INT NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY(id)
+);

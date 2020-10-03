@@ -1,0 +1,14 @@
+{
+  "name": "slack_bot",
+  "version": "1.0.0",
+  "description": "Slack attendance bot",
+  "author": "MaetDol",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "mysql": "2.18.1",
+    "date-fns": "2.16.1"
+  }
+}
