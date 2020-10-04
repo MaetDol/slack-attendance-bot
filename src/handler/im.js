@@ -40,9 +40,12 @@ async function postAttendanceStatus( date, studyChannel, dmChannel ) {
     channel: studyChannel,
     date: dateFormatiing( date, '-', '-')
   });
-  const attendedUsers = records.filter( r => channelUsers.includes( r.user ));
-  const absentedUsers = channelUsers.filter( 
-    u => records.find( r => r.user === u ) === undefined 
+  const dbUsers = await db.select.usersByChannel( studyChannel )
+    .then( records => records.map( r => r.user ));
+  const allUsers = participatingUsers( dbUsers, channelUsers );
+  const attendedUsers = records.filter( r => allUsers.includes( r.user ));
+  const absentedUsers = allUsers.filter( u => 
+    records.find( r => r.user === u ) === undefined 
   );
 
   api.postMessage({ 
@@ -66,6 +69,10 @@ ${ attended }
 
 아직 제출 안 한 사람들
 ${ absented }`;
+}
+
+function participatingUsers( dbUsers, channelUsers ) {
+  return channelUsers.filter( u => dbUsers.includes( u ));
 }
 
 function dateFormatiing( d, yi='', mi='', di='' ) {

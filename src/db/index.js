@@ -73,6 +73,17 @@ const select = {
       executeQuery( query, resolve, reject )
     );
   },
+
+  usersByChannel( channel ) {
+    const query =`
+      SELECT user, id FROM attendance
+      WHERE channel = '${channel}'
+      GROUP BY user
+    `;
+    return new Promise(( resolve, reject ) =>
+      executeQuery( query, resolve, reject )
+    );
+  },
 };
 
 const update = {
