@@ -1,4 +1,6 @@
 db_datas/*
 logs/*
 
+!*/.gitkeep
+
 properties.env
