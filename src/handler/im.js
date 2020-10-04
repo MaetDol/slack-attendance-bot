@@ -1,33 +1,44 @@
 const api = require('../api');
 const db = require('../db/');
-const { getKSTDate } = require('../utils');
+const df = require('date-fns');
+const { getKSTDate, getYesterday } = require('../utils');
 
 function handler(e) {
+  if( isSentByBot(e) ) {
+    return false;
+  }
   const { text, channel: dmChannel } = e;
-  if( isRequestAttendanceStatus(e) ) {
-    const channel = text.match( channelRegex )[1];
-    postAttendanceStatus( channel, dmChannel );
+  if( lookupYesterday(e) ) {
+    const studyChannel = text.match( channelProvide )[1];
+    postAttendanceStatus( getYesterday(), studyChannel, dmChannel );
+  } else if( lookupToday(e) ) {
+    const studyChannel = text.match( channelProvide )[1];
+    postAttendanceStatus( getKSTDate(), studyChannel, dmChannel );
   }
 }
 
-const channelRegex = /<#([A-Z0-9]+)\|[^>]+>/;
-function isRequestAttendanceStatus(e) {
-  return !isSentByBot(e) && /진도/.test( e.text ) && channelRegex.test( e.text );
+const channelProvide = /<#([A-Z0-9]+)\|[^>]+>/;
+function lookupToday(e) {
+  return /진도|오늘/.test( e.text ) && channelProvide.test( e.text );
+}
+
+function lookupYesterday(e) {
+  return /어제/.test( e.text ) && channelProvide.test( e.text );
 }
 
 function isSentByBot(e) {
   return e.bot_id !== undefined && e.type === 'message';
 }
 
-async function postAttendanceStatus( channel, dmChannel ) {
+async function postAttendanceStatus( date, studyChannel, dmChannel ) {
 
-  const { members: channelUsers }= await api.userList( channel );
+  const { members: channelUsers }= await api.userList( studyChannel );
   if( channelUsers === undefined ) {
     throw new Error('Channel not found');
   }
   const records = await db.select.usersByDate({
-    channel,
-    date: todayWithIndicator('-', '-')
+    channel: studyChannel,
+    date: dateFormatiing( date, '-', '-')
   });
   const attendedUsers = records.filter( r => channelUsers.includes( r.user ));
   const absentedUsers = channelUsers.filter( 
@@ -36,18 +47,18 @@ async function postAttendanceStatus( channel, dmChannel ) {
 
   api.postMessage({ 
     channel: dmChannel, 
-    text: newStatusMessage( attendedUsers, absentedUsers ) 
+    text: newStateMessage( date, attendedUsers, absentedUsers ) 
   });
 }
 
-function newStatusMessage( attendedUsers, absentedUsers ) {
+function newStateMessage( date, attendedUsers, absentedUsers ) {
   const today = getKSTDate();
   const attended = attendedUsers.map(({ user, title, permalink }) => 
     `- <@${ user }>  :pencil2: <${ permalink }|${ title }>`).join('\n');
   const absented = absentedUsers.map( user => 
     `- <@${ user }>`).join('\n');
 
-  return `${todayWithIndicator('년 ', '월 ', '일')}
+  return `${dateFormatiing( date, '년 ', '월 ', '일')}
 ￣￣￣￣￣￣￣￣￣￣
 제출한 사람들
 ${ attended }
@@ -57,9 +68,8 @@ ${ attended }
 ${ absented }`;
 }
 
-function todayWithIndicator( yi='', mi='', di='' ) {
-  const d = getKSTDate();
-  return d.getFullYear() + yi + (d.getMonth() +1) + mi + d.getDate() + di;
+function dateFormatiing( d, yi='', mi='', di='' ) {
+  return df.format( d, `yyyy${yi}MM${mi}dd${di}` );
 }
 
 module.exports = handler;

@@ -4,14 +4,17 @@ function getKSTDate() {
   return new Date();
 }
 
+function getYesterday() {
+  const yesterday = getKSTDate();
+  return yesterday.setDate( yesterday.getDate() - 1 );
+}
+
 function isWrittenToday( date ) {
   return toLocalDateString( getKSTDate() ) === toLocalDateString( date );
 }
 
 function isWrittenYesterday( date ) {
-  const yesterday = getKSTDate();
-  yesterday.setDate( yesterday.getDate() - 1 );
-  return toLocalDateString( yesterday ) === toLocalDateString( date );
+  return toLocalDateString( getYesterday() ) === toLocalDateString( date );
 }
 
 function toLocalDateString( d ) { 
@@ -31,6 +34,7 @@ function toLocalString( d ) {
 
 module.exports = {
   getKSTDate,
+  getYesterday,
   isWrittenToday,
   isWrittenYesterday,
   toLocalDateString,
