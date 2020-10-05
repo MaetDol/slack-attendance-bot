@@ -84,6 +84,30 @@ const select = {
       executeQuery( query, resolve, reject )
     );
   },
+
+  lastRecordByChannel( channel ) {
+    const query = `
+      SELECT data.*
+      FROM attendance as data,
+        (SELECT MAX(ts) as ts FROM attendance GROUP BY user) as max_ts
+      WHERE data.ts = max_ts.ts
+    `;
+    return new Promise(( resolve, reject ) => 
+      executeQuery( query, resolve, reject )
+    );
+  },
+
+  firstRecordByChannel( channel ) {
+    const query = `
+      SELECT data.*
+      FROM attendance as data,
+        (SELECT MIN(ts) as ts FROM attendance GROUP BY user) as min_ts
+      WHERE data.ts = min_ts.ts
+    `;
+    return new Promise(( resolve, reject ) =>
+      executeQuery( query, resolve, reject )
+    );
+  },
 };
 
 const update = {
