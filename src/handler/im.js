@@ -68,22 +68,22 @@ async function postAttendanceStatus( date, studyChannel, dmChannel ) {
 function newStateMessage( date, attendedUsers, absentedUsers ) {
   const today = getKSTDate();
   const attended = attendedUsers.map(({ user, title, permalink, attendRate, consecutive }) => 
-`<@${ user }> :calendar: 출석률 ${attendRate}%, :fire: ${consecutive}일 연속!
-:pencil2: <${ permalink }|${ title }>`).join('\n');
+`<@${ user }> :calendar: 출석률 ${attendRate}%, :fire: ${consecutive}일 연속! :pencil2: <${ permalink }|${ title }>`)
+    .join('\n');
 
-  const absented = absentedUsers.map(({ user, attendRate }) => 
-`<@${ user }> :calendar: 출석률 ${attendRate}%`).join('\n');
+  const absented = absentedUsers.map(({ user, attendRate }) => `<@${ user }> :calendar: 출석률 ${attendRate}%`)
+    .join('\n');
 
   return `
 ${formattingDate( date, '년 ', '월 ', '일')}
-￣￣￣￣￣￣￣￣￣￣
+￣￣￣￣￣￣￣￣￣￣￣
 제출한 사람들
 ${ attended }
 
 
 아직 제출 안 한 사람들
 ${ absented }
---------------------
+￣￣￣￣￣￣￣￣￣￣￣
 `;
 }
 
