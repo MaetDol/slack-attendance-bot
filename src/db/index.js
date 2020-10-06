@@ -53,16 +53,6 @@ const select = {
     return execute( query );
   },
 
-  byUserAndToday({ user, channel }) {
-    const query =`
-      SELECT * FROM attendance
-      WHERE channel = '${channel}' AND 
-            user = '${user}' AND
-            DATE(date) = DATE(now())
-    `;
-    return execute( query );
-  },
-
   usersByChannel( channel ) {
     const query =`
       SELECT user FROM attendance
