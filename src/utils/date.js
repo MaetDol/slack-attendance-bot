@@ -32,6 +32,10 @@ function toLocalString( d ) {
   };
 }
 
+function formattingDate( date, y, m, d='' ) {
+  return format( date, `yyyy${y}MM${m}dd${d}` );
+}
+
 module.exports = {
   getKSTDate,
   getYesterday,
@@ -40,4 +44,5 @@ module.exports = {
   toLocalDateString,
   toLocalTimeString,
   toLocalString,
+  formattingDate,
 };

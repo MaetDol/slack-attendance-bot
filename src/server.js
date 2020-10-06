@@ -1,13 +1,12 @@
 const http = require('http');
 const router = require('./router');
-const logger = require('./logger');
+const logger = require('./utils/logger');
 
 http.createServer(( req, res ) => {
 
   res.setHeader('Access-Control-Allow-Origin', '*');
 
-  console.log('\nurl: ', req.url );
-  console.log('method: ', req.method );
+  logger.info(`Request ${req.url}, ${req.method}`);
   const isSupportedRequest = req.method === 'POST' && req.url === '/';
   if( !isSupportedRequest ) {
     console.log('Not supported request');

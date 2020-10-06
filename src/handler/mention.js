@@ -1,7 +1,7 @@
 const { escape: escapeSql } = require('mysql');
 const api = require('../api');
 const db = require('../db');
-const { isWrittenToday, isWrittenYesterday } = require('../utils');
+const { isWrittenToday, isWrittenYesterday } = require('../utils/date');
 
 async function handler({ user, channel, ts, text }) {
   const lastData = await db.select.lastByUser({ user, channel });
@@ -10,7 +10,7 @@ async function handler({ user, channel, ts, text }) {
   const title = getTitle( text );
   const permalink = await api.getPermalink({ channel, timestamp: ts }).then( r => r.permalink );
   if( isDataExists && isWrittenToday( lastData[0].date )) {
-    db.update.oneTimestamp({ id: lastData[0].id, ts, permalink, title });
+    db.update.one({ id: lastData[0].id, ts, permalink, title });
     removeReaction({ channel, ts: lastData[0].ts });
   } else {
     let consecutive = 1;

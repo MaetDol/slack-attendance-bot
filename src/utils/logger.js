@@ -5,13 +5,12 @@ const {
   toLocalString,
   getKSTDate,
   isWrittenToday,
-} = require('./utils');
-
-
+} = require('./date');
 
 class Logger {
   
   constructor() {
+    this.CONSOLE = process.env.CONSOLE;
     this.LOG_DIR = process.env.LOG_DIR;
     this.init( getKSTDate() );
   }
@@ -68,7 +67,7 @@ class Logger {
     if( !isWrittenToday( this.date.obj ) ) {
       this.init( timestamp );
     }
-    this.writeStream.write(
+    this.write(
       `${this.date.string.time} [INFO] ${data}\n`
     );
   }
@@ -78,9 +77,16 @@ class Logger {
     if( !isWrittenToday( this.date.obj ) ) {
       this.init( timestamp );
     }
-    this.writeStream.write(
+    this.write( 
       `${this.date.string.time} [ERROR] ${data}\n`
     );
+  }
+
+  write( msg ) {
+    if( this.CONSOLE ) {
+      console.log( msg );
+    }
+    this.writeStream.write( msg );
   }
 
 }

@@ -1,7 +1,6 @@
 const api = require('../api');
 const db = require('../db/');
-const df = require('date-fns');
-const { getKSTDate, getYesterday } = require('../utils');
+const { getKSTDate, getYesterday, formattingDate } = require('../utils/date');
 
 function handler(e) {
   if( isSentByBot(e) ) {
@@ -32,21 +31,19 @@ function isSentByBot(e) {
 
 async function postAttendanceStatus( date, studyChannel, dmChannel ) {
 
-  const { members: channelUsers }= await api.userList( studyChannel );
-  if( channelUsers === undefined ) {
-    throw new Error('Channel not found');
-  }
-  const records = await db.select.usersByDate({
+  let channelUsers = api.userList( studyChannel ).then( r => r.members );
+  let records = db.select.usersByDate({
     channel: studyChannel,
-    date: dateFormatiing( date, '-', '-')
+    date: formattingDate( date, '-', '-')
   });
-  const dbUsers = await db.select.usersByChannel( studyChannel )
+  let dbUsers = db.select.usersByChannel( studyChannel )
     .then( records => records.map( r => r.user ));
-  const allUsers = participatingUsers( dbUsers, channelUsers );
+
+  [channelUsers, dbUsers, records] = await Promise.all([channelUsers, dbUsers, records]);
+
+  const allUsers = existsUsers( dbUsers, channelUsers );
   const attendedUsers = records.filter( r => allUsers.includes( r.user ));
-  const absentedUsers = allUsers.filter( u => 
-    records.find( r => r.user === u ) === undefined 
-  );
+  const absentedUsers = allUsers.filter( u => !records.some( r => r.user === u ));
 
   api.postMessage({ 
     channel: dmChannel, 
@@ -61,7 +58,7 @@ function newStateMessage( date, attendedUsers, absentedUsers ) {
   const absented = absentedUsers.map( user => 
     `- <@${ user }>`).join('\n');
 
-  return `${dateFormatiing( date, '년 ', '월 ', '일')}
+  return `${formattingDate( date, '년 ', '월 ', '일')}
 ￣￣￣￣￣￣￣￣￣￣
 제출한 사람들
 ${ attended }
@@ -71,12 +68,8 @@ ${ attended }
 ${ absented }`;
 }
 
-function participatingUsers( dbUsers, channelUsers ) {
+function existsUsers( dbUsers, channelUsers ) {
   return channelUsers.filter( u => dbUsers.includes( u ));
-}
-
-function dateFormatiing( d, yi='', mi='', di='' ) {
-  return df.format( d, `yyyy${yi}MM${mi}dd${di}` );
 }
 
 module.exports = handler;
