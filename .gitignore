@@ -1,7 +1,9 @@
 db_datas/*
 logs/*
 
+docker-compose.yml
+properties.env
+
+*.swp
 !*/.gitkeep
 
-properties.env
-*.swp
