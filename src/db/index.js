@@ -62,7 +62,7 @@ const select = {
     return execute( query );
   },
 
-  dateInfoByChannel( channel ) {
+  attendInfosByChannel( channel ) {
     const query = `
       SELECT user, MIN(ts) as first, MAX(ts) as last, COUNT(ts) as count
       FROM attendance
