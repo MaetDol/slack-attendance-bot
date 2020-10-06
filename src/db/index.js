@@ -65,32 +65,23 @@ const select = {
 
   usersByChannel( channel ) {
     const query =`
-      SELECT user, id FROM attendance
+      SELECT user FROM attendance
       WHERE channel = '${channel}'
       GROUP BY user
     `;
     return execute( query );
   },
 
-  lastRecordByChannel( channel ) {
+  dateInfoByChannel( channel ) {
     const query = `
-      SELECT data.*
-      FROM attendance as data,
-        (SELECT MAX(ts) as ts FROM attendance WHERE channel = '${channel}' GROUP BY user) as max_ts
-      WHERE data.ts = max_ts.ts
+      SELECT user, MIN(ts) as first, MAX(ts) as last, COUNT(ts) as count
+      FROM attendance
+      WHERE channel = '${channel}'
+      GROUP BY user
     `;
     return execute( query );
   },
 
-  firstRecordByChannel( channel ) {
-    const query = `
-      SELECT data.*
-      FROM attendance as data,
-        (SELECT MIN(ts) as ts FROM attendance WHERE channel = '${channel}' GROUP BY user) as min_ts
-      WHERE data.ts = min_ts.ts
-    `;
-    return execute( query );
-  },
 };
 
 const update = {
