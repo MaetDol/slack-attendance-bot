@@ -32,14 +32,17 @@ function isSentByBot(e) {
 
 async function postAttendanceStatus( date, studyChannel, dmChannel ) {
 
-  const { members: channelUsers }= await api.userList( studyChannel );
-  const records = await db.select.usersByDate({
+  let channelUsers = api.userList( studyChannel ).then( r => r.members );
+  let records = db.select.usersByDate({
     channel: studyChannel,
     date: dateFormatiing( date, '-', '-')
   });
-  const dbUsers = await db.select.usersByChannel( studyChannel )
+  let dbUsers = db.select.usersByChannel( studyChannel )
     .then( records => records.map( r => r.user ));
-  const allUsers = participatingUsers( dbUsers, channelUsers );
+
+  [channelUsers, dbUsers, records] = await Promise.all([channelUsers, dbUsers, records]);
+
+  const allUsers = existsUsers( dbUsers, channelUsers );
   const attendedUsers = records.filter( r => allUsers.includes( r.user ));
   const absentedUsers = allUsers.filter( u => 
     records.find( r => r.user === u ) === undefined 
@@ -68,7 +71,7 @@ ${ attended }
 ${ absented }`;
 }
 
-function participatingUsers( dbUsers, channelUsers ) {
+function existsUsers( dbUsers, channelUsers ) {
   return channelUsers.filter( u => dbUsers.includes( u ));
 }
 
