@@ -1,5 +1,4 @@
 const { format } = require('date-fns');
-const logger = require('./logger');
 
 function getKSTDate() {
   return new Date();
@@ -33,9 +32,8 @@ function toLocalString( d ) {
   };
 }
 
-function err( msg ) {
-  logger.error( msg );
-  throw msg;
+function formattingDate( date, y, m, d='' ) {
+  return format( date, `yyyy${y}MM${m}dd${d}` );
 }
 
 module.exports = {
@@ -46,5 +44,5 @@ module.exports = {
   toLocalDateString,
   toLocalTimeString,
   toLocalString,
-  err,
+  formattingDate,
 };

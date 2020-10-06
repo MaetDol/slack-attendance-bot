@@ -1,7 +1,7 @@
 const { escape: escapeSql } = require('mysql');
 const api = require('../api');
 const db = require('../db');
-const { isWrittenToday, isWrittenYesterday } = require('../utils');
+const { isWrittenToday, isWrittenYesterday } = require('../utils/date');
 
 async function handler({ user, channel, ts, text }) {
   const lastData = await db.select.lastByUser({ user, channel });

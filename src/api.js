@@ -1,6 +1,6 @@
 const https = require('https');
-const { err } = require('./utils);
-const logger = require('./logger');
+const { err } = require('./utils/default');
+const logger = require('./utils/logger');
 
 const baseUrl = 'slack.com';
 const token = process.env.xoxb_token;

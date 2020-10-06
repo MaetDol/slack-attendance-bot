@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 const config = require('./config');
-const logger = require('./logger');
+const logger = require('../utils/logger');
 
 console.log('create pool')
 const pool = mysql.createPool( config );
@@ -105,7 +105,6 @@ const update = {
 };
 
 module.exports = {
-  test,
   insert,
   select,
   update,

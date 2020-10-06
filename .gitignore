@@ -4,3 +4,4 @@ logs/*
 !*/.gitkeep
 
 properties.env
+*.swp
