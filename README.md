@@ -17,3 +17,28 @@ DM으로 해당 명령어를 입력하면 해당 채널의 당일 제출 현황�
 
 ## DM으로, `#channel 어제`
 진도 명령어와 같은 형식으로 어제 제출 현황을 보여줍니다.
+
+
+# 해당 레포지토리를 사용할때 세팅
+
+## properties.env 파일(생성필요)
+- `xoxb_token={발급받은 토큰}` - 슬랙에서 앱을 만들면 발급받을 수 있는 토큰입니다.
+- `LOG_DIR=/usr/src/app/logs` - 노드 로그를 저장할 도커 내 패스입니다. 해당값으로 유지해주세요
+- `MYSQL_ROOT_PASSWORD={사용할 mariadb 비밀번호}` - MariaDB 비밀번호입니다.
+
+## docker-compose.yml 파일
+ - `ports: '8079:8079'` - 내부포트는 8079포트를 이용합니다. 외부포트는 필요한 포트로 바꿔 사용하시면 됩니다.
+ 
+## Slack Bot 권한 설정
+### Event Subscriptions
+- `app_mention` - 봇을 호출해 출석할때 사용
+- `message.im` - DM으로 출석 상태 조회할때 사용
+
+### Scopes
+- `app_mentions:read` - app_mention 이벤트 구독을 위해 필요
+- `im:history` - message.im 이벤트 구독을 위해 필요
+- `reactions:write` - 봇이 확인한 후 이모지를 달아주거나 삭제하기 위해 필요
+- `channels:read`, `groups:read`, `im:read`, `mpim:read` - 특정 채널 유저 목록을 조회할때 필요
+- `chat:write`, `im:write` - DM으로 메시지를 보낼때 필요
+
+
