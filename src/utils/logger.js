@@ -1,8 +1,6 @@
 const fs = require('fs');
 const { 
-  toLocalDateString, 
-  toLocalTimeString, 
-  toLocalString,
+  toLocaleString,
   getKSTDate,
   isWrittenToday,
 } = require('./date');
@@ -47,7 +45,7 @@ class Logger {
   set date( date ) {
     this._date = {
       obj: date,
-      string: toLocalString( date )
+      string: toLocaleString( date )
     };
   }
 
