@@ -43,7 +43,7 @@ async function postAttendanceStatus( date, studyChannel, dmChannel ) {
 
   const allUsers = existsUsers( dbUsers, channelUsers );
   const attendedUsers = records.filter( r => allUsers.includes( r.user ));
-  const absentedUsers = allUsers.filter( u => !records.even( r => r.user === u ));
+  const absentedUsers = allUsers.filter( u => !records.some( r => r.user === u ));
 
   api.postMessage({ 
     channel: dmChannel, 
