@@ -24,6 +24,7 @@ DM으로 해당 명령어를 입력하면 해당 채널의 당일 제출 현황�
 ## properties.env 파일(생성필요)
 - `xoxb_token={발급받은 토큰}` - 슬랙에서 앱을 만들면 발급받을 수 있는 토큰입니다.
 - `LOG_DIR=/usr/src/app/logs` - 노드 로그를 저장할 도커 내 패스입니다. 해당값으로 유지해주세요
+- `CONSOLE=false` - 로거로 받은 메시지들을 console.log로 출력할지 여부입니다. 생략해도 됩니다.
 - `MYSQL_ROOT_PASSWORD={사용할 mariadb 비밀번호}` - MariaDB 비밀번호입니다.
 
 ## docker-compose.yml 파일
