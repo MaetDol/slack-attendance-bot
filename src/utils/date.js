@@ -1,4 +1,5 @@
 const { format } = require('date-fns');
+const A_DAY = 60*60*24*1000;
 
 function getKSTDate() {
   return new Date();
@@ -36,6 +37,11 @@ function formattingDate( date, y, m, d='' ) {
   return format( date, `yyyy${y}MM${m}dd${d}` );
 }
 
+function dateDistance( a, b ) {
+  const distance = Math.ceil( (b - a) / A_DAY );
+  return Math.abs( distance );
+}
+
 module.exports = {
   getKSTDate,
   getYesterday,
@@ -45,4 +51,5 @@ module.exports = {
   toLocaleTimeString,
   toLocaleString,
   formattingDate,
+  dateDistance,
 };
