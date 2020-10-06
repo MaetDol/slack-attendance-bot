@@ -1,4 +1,5 @@
 const https = require('https');
+const { err } = require('./utils);
 const logger = require('./logger');
 
 const baseUrl = 'slack.com';
@@ -27,7 +28,7 @@ function request( type, params, resolve=()=>{}, reject=()=>{} ) {
       }
       throw data.error;
     })
-    .catch( e => logger.error(`Requested ${type} with query ${query}\nbut got an error: ${e}`) );
+    .catch( e => err(`Requested ${type} with query ${query}\nbut got an error: ${e}`) );
 }
 
 function addReaction({ channel, emoji: name, timestamp }) {
@@ -52,6 +53,9 @@ async function userList( channel ) {
   return request('conversations.members', {
     token,
     channel,
+  }).then( d => {
+    if( d.members === undefined ) err(`api.userList: Channel not found: ${channel}`);
+    return d;
   });
 }
 

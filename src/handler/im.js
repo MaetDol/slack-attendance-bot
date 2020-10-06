@@ -33,9 +33,6 @@ function isSentByBot(e) {
 async function postAttendanceStatus( date, studyChannel, dmChannel ) {
 
   const { members: channelUsers }= await api.userList( studyChannel );
-  if( channelUsers === undefined ) {
-    throw new Error('Channel not found');
-  }
   const records = await db.select.usersByDate({
     channel: studyChannel,
     date: dateFormatiing( date, '-', '-')
