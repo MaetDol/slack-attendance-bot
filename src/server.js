@@ -6,7 +6,7 @@ http.createServer(( req, res ) => {
 
   res.setHeader('Access-Control-Allow-Origin', '*');
 
-  logger.info(`Request ${url}, ${method}`);
+  logger.info(`Request ${req.url}, ${req.method}`);
   const isSupportedRequest = req.method === 'POST' && req.url === '/';
   if( !isSupportedRequest ) {
     console.log('Not supported request');
