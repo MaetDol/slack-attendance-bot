@@ -10,7 +10,7 @@ async function handler({ user, channel, ts, text }) {
   const title = getTitle( text );
   const permalink = await api.getPermalink({ channel, timestamp: ts }).then( r => r.permalink );
   if( isDataExists && isWrittenToday( lastData[0].date )) {
-    db.update.oneTimestamp({ id: lastData[0].id, ts, permalink, title });
+    db.update.one({ id: lastData[0].id, ts, permalink, title });
     removeReaction({ channel, ts: lastData[0].ts });
   } else {
     let consecutive = 1;
