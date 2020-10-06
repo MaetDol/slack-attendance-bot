@@ -15,22 +15,19 @@ function request( type, params, resolve=()=>{}, reject=()=>{} ) {
       hostname: baseUrl,
       path: `/api/${type}?${query}`,
       method: 'POST',
-    }, res => res.on('data', d => {
-      logger.info(d);
-      resolve(d);
-    }))
+    }, res => res.on('data', d => resolve(d) ))
       .on('error', e => reject(e) )
       .end()
   )
     .then( response => JSON.parse( response ))
     .then( data => {
       if( data.ok ) {
-        logger.info(`Got response from ${type} with query ${query}\n response: ${data}`);
+        logger.info(`Response from ${type}\nData: ${data}`);
         return data;
       }
-      throw new Error( data.error );
+      throw data.error;
     })
-    .catch( e => logger.error(`Requested ${type} with query ${query}\n but got an error: ${e}`) );
+    .catch( e => logger.error(`Requested ${type} with query ${query}\nbut got an error: ${e}`) );
 }
 
 function addReaction({ channel, emoji: name, timestamp }) {
