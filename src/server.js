@@ -1,7 +1,7 @@
 const http = require('http');
 const router = require('./router');
 const logger = require('./utils/logger');
-const verify = require('./utils/verifyRequest');
+const verifySentFromSlack = require('./utils/verifySentFromSlack');
 
 const CORS_SLACK = 'https://slack.com';
 http.createServer(( req, res ) => {
@@ -22,9 +22,7 @@ http.createServer(( req, res ) => {
     logger.info(`Request ${req.url}, ${req.method}\n\tFrom ${res.socket.remoteAddress}\n\tHeader ${JSON.stringify(req.headers)}\n\tBody ${body}`);
     let responseBody = '';
     try {
-      const timestamp = req.headers['x-slack-request-timestamp'];
-      const isInvalidRequest = verify( timestamp, body ) !== req.headers['x-slack-signature'];  
-      if( isInvalidRequest ) throw `Invalid request`;
+      verifySentFromSlack( req.headers, body );
 
       responseBody = router.route( body );
       res.writeHead( 200 );
