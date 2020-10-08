@@ -30,6 +30,10 @@ http.createServer(( req, res ) => {
       logger.error(`Raised error to root: ${e}`);
       res.writeHead( 500 );
     } finally {
+      if( typeof responseBody !== 'string' ) {
+        logger.error(`ResponseBody is not String type: ${responseBody}`);
+        responseBody = '';
+      }
       res.end( responseBody );
     }
   });
