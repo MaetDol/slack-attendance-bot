@@ -38,7 +38,9 @@ function formattingDate( date, y, m, d='' ) {
 }
 
 function dateDistance( a, b ) {
-  const distance = Math.ceil( (b - a) / A_DAY );
+  const a_date = new Date( toLocaleDateString( a ));
+  const b_date = new Date( toLocaleDateString( b ));
+  const distance = Math.ceil( (b_date - a_date) / A_DAY );
   return Math.abs( distance );
 }
 
