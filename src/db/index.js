@@ -85,7 +85,7 @@ const update = {
   one({ id, ts, permalink, title, date }) {
     const query = `
       UPDATE attendance 
-      SET ts='${ts}', permalink='${permalink}', title='${pool.escape( title )}', date=${pool.escape( date )}
+      SET ts='${ts}', permalink='${permalink}', title=${pool.escape( title )}, date=${pool.escape( date )}
       WHERE id = ${id}
     `;
     return execute( query );
