@@ -94,7 +94,7 @@ const update = {
   consecutive({ id, consecutive }) {
     const query = `
       UPDATE attendance
-      SET consecutive = '${consecutive}'
+      SET consecutive = ${consecutive}
       WHERE id = ${id}
     `;
     return execute( query );
