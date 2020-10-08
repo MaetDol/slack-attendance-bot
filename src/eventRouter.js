@@ -4,14 +4,14 @@ const imHandler = require('./handler/im');
 function route({ event: e }) {
 
   if( isMention(e) ) {
-    return mentionHandler(e);
-
+    mentionHandler(e);
   } else if( isIM(e) ) {
-    return imHandler(e);
-
+    imHandler(e);
   } else {
     return 'Does not handled eventn type: ' + e.type;
   }
+
+  return '';
 }
 
 function isMention(e) {
