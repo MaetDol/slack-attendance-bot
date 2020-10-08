@@ -30,6 +30,13 @@ const insert = {
 
 const select = {
 
+  all() {
+    const query = `
+      SELECT * FROM attendance
+    `;
+    return execute( query );
+  },
+
   lastByUser({ user, channel }) {
     const matched = `
       channel = '${channel}' and
@@ -78,11 +85,21 @@ const update = {
   one({ id, ts, permalink, title, date }) {
     const query = `
       UPDATE attendance 
-      SET ts='${ts}', permalink='${permalink}', title=${pool.escape( title )}, date=${pool.escape( date )}
+      SET ts='${ts}', permalink='${permalink}', title='${pool.escape( title )}', date=${pool.escape( date )}
       WHERE id = ${id}
     `;
     return execute( query );
-  }
+  },
+
+  consecutive({ id, consecutive }) {
+    const query = `
+      UPDATE attendance
+      SET consecutive = '${consecutive}'
+      WHERE id = ${id}
+    `;
+    return execute( query );
+  },
+
 };
 
 module.exports = {
