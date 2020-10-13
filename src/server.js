@@ -8,9 +8,10 @@ http.createServer(( req, res ) => {
 
   res.setHeader('Access-Control-Allow-Origin', '*');
 
+  logger.info(`Request ${req.url}, ${req.method}\n\tFrom ${res.socket.remoteAddress}\n\tHeader ${JSON.stringify(req.headers)}`);
   const isSupportedRequest = req.method === 'POST' && req.url === '/';
   if( !isSupportedRequest ) {
-    logger.log('Not supported request');
+    logger.error('Not supported request');
     res.writeHead(405);
     res.end();
     return;
@@ -19,7 +20,7 @@ http.createServer(( req, res ) => {
   let body = '';
   req.on('data', ch => body += ch );
   req.on('end', () => {
-    logger.info(`Request ${req.url}, ${req.method}\n\tFrom ${res.socket.remoteAddress}\n\tHeader ${JSON.stringify(req.headers)}\n\tBody ${body}`);
+    logger.info(`Body: ${body}`);
     let responseBody = '';
     try {
       verifySentFromSlack( req.headers, body );
