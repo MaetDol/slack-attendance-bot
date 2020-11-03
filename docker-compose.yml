@@ -13,6 +13,12 @@ services:
       - ./src:/usr/src/app/src
       - ./logs:/usr/src/app/logs
     command: node src/server.js
+    logging:
+      driver: 'json-file'
+      options:
+        max-file: '3'
+        max-size: 1m
+    restart: always
   db:
     build: 
       context: .
@@ -21,3 +27,9 @@ services:
     volumes:
       - ./init_files/initdb.sql:/docker-entrypoint-initdb.d/init.sql
       - ./db_datas:/var/lib/mysql/
+    logging:
+      driver: 'json-file'
+      options:
+        max-file: '3'
+        max-size: 1m
+    restart: always
