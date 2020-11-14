@@ -13,6 +13,7 @@ async function handler({ user, channel, ts, text }) {
     db.update.one({ id: lastData[0].id, ts, permalink, title });
     if( lastData[0].ts !== ts ) {
       removeReaction({ channel, ts: lastData[0].ts });
+      addReaction({ channel, ts });
     }
   } else {
     let consecutive = 1;
@@ -27,8 +28,8 @@ async function handler({ user, channel, ts, text }) {
       title,
       permalink,
     });
+    addReaction({ channel, ts });
   }
-  addReaction({ channel, ts });
 }
 
 function getTitle( text ) {
