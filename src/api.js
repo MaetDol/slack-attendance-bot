@@ -19,16 +19,16 @@ function request( type, params, resolve=()=>{}, reject=()=>{} ) {
     }, res => res.on('data', d => resolve(d) ))
       .on('error', e => reject(e) )
       .end()
-  )
-    .then( response => JSON.parse( response ))
-    .then( data => {
-      if( data.ok ) {
-        logger.info(`Response from ${type}\nData: ${data}`);
-        return data;
-      }
+
+    ).then( response => {
+      logger.info(`Response from ${type}\nResponse: ${response}`);
+      return JSON.parse( response );
+
+    }).then( data => {
+      if( data.ok ) return data;
       throw data.error;
-    })
-    .catch( e => err(`Requested ${type} with query ${query}\nbut got an error: ${e}`) );
+
+    }).catch( e => err(`Requested ${type} with query ${query}\nbut got an error: ${e}`) );
 }
 
 function addReaction({ channel, emoji: name, timestamp }) {
