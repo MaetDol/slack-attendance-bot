@@ -10,7 +10,7 @@ class Logger {
   constructor() {
     this.CONSOLE = process.env.CONSOLE;
     this.LOG_DIR = process.env.LOG_DIR;
-    this.init( getKSTDate() );
+    this.init();
   }
 
   createPath( path ) {
@@ -42,19 +42,15 @@ class Logger {
     };
   }
 
-  set date( date ) {
-    this._date = {
+  get date() {
+    const date = getKSTDate();
+    return {
       obj: date,
-      string: toLocaleString( date )
+      string: toLocaleString( date ),
     };
   }
 
-  get date() {
-    return this._date;
-  }
-
-  init( date ) {
-    this.date = date;
+  init() {
     const {dir, file} = this.toPath( this.date.string.date );
     this.createPath( dir );
     this.writeStream = this.createWriteStream( dir + file );
