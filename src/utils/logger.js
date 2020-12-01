@@ -13,6 +13,13 @@ class Logger {
     this.init();
   }
 
+  init() {
+    const {date} = toLocaleString( getKSTDate() );
+    const {dir, file} = this.path = this.toPath( date );
+    this.createPath( dir );
+    this.writeStream = this.createWriteStream( dir + file );
+  }
+
   createPath( path ) {
     const begin = path.match(/^\.*\/.{0}/);
     let dir = './';
@@ -50,37 +57,23 @@ class Logger {
     };
   }
 
-  init() {
-    const {dir, file} = this.toPath( this.date.string.date );
-    this.createPath( dir );
-    this.writeStream = this.createWriteStream( dir + file );
-  }
 
   info( data ) {
-    const timestamp = getKSTDate();
-    if( !isWrittenToday( this.date.obj ) ) {
-      this.init( timestamp );
-    }
-    this.write(
-      `${this.date.string.time} [INFO] ${data}\n`
-    );
+    this.write(` [INFO] ${data}\n`);
   }
 
   error( data ) {
-    const timestamp = getKSTDate();
-    if( !isWrittenToday( this.date.obj ) ) {
-      this.init( timestamp );
-    }
-    this.write( 
-      `${this.date.string.time} [ERROR] ${data}\n`
-    );
+    this.write(` [ERROR] ${data}\n`);
   }
 
   write( msg ) {
-    if( this.CONSOLE ) {
-      console.log( msg );
-    }
-    this.writeStream.write( msg );
+    const ts = getKSTDate();
+    const {time} = toLocaleString( ts );
+    if( !isWrittenToday(ts) ) this.init();
+
+    const log = time + msg;
+    if( this.CONSOLE ) console.log( log );
+    this.writeStream.write( log );
   }
 
 }
