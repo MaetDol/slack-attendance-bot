@@ -14,8 +14,9 @@ class Logger {
   }
 
   init() {
-    const {date} = toLocaleString( getKSTDate() );
-    const {dir, file} = this.path = this.toPath( date );
+    this.initDate = getKSTDate();
+    const {date} = toLocaleString( this.initDate );
+    const {dir, file} = this.toPath( date );
     this.createPath( dir );
     this.writeStream = this.createWriteStream( dir + file );
   }
@@ -67,10 +68,10 @@ class Logger {
   }
 
   write( msg ) {
+    if( !isWrittenToday(this.initDate) ) this.init();
+
     const ts = getKSTDate();
     const {time} = toLocaleString( ts );
-    if( !isWrittenToday(ts) ) this.init();
-
     const log = time + msg;
     if( this.CONSOLE ) console.log( log );
     this.writeStream.write( log );
