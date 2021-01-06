@@ -11,12 +11,17 @@ function request( type, params, resolve=()=>{}, reject=()=>{} ) {
     query += `${key}=${encodeURIComponent( params[key] )}&`;
   }
 
+  const options = {
+    hostname: baseUrl,
+    path: `/api/${type}?${query}`,
+    method: 'POST',
+  };
+  let data = '';
   return new Promise(( resolve, reject ) => 
-    https.request({
-      hostname: baseUrl,
-      path: `/api/${type}?${query}`,
-      method: 'POST',
-    }, res => res.on('data', d => resolve(d) ))
+    https.request( options, res => {
+      res.on('data', d => data += d );
+      res.on('end', _=> resolve(data) );
+    })
       .on('error', e => reject(e) )
       .end()
 
